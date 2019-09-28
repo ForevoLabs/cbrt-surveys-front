@@ -10,14 +10,14 @@ interface Props {
 interface State {
   username: string
   password: string
-  status: string
+  error: string
 }
 
 export default class Login extends React.Component<Props, State> {
   state = {
     username: '',
     password: '',
-    status: '',
+    error: '',
   }
 
   handleLogIn = (event: FormEvent) => {
@@ -27,11 +27,11 @@ export default class Login extends React.Component<Props, State> {
     axios
       .post(BASE_URL + '/login', { username, password }, { withCredentials: true })
       .then(() => {
-        this.setState({ status: '' })
+        this.setState({ error: '' })
         this.props.checkLogin()
       })
       .catch(() => {
-        this.setState({ status: 'Имя пользователя и/или пароль неправильные.' })
+        this.setState({ error: 'Имя пользователя и/или пароль неправильные.' })
       })
   }
 
@@ -74,7 +74,7 @@ export default class Login extends React.Component<Props, State> {
             >
               Войти
             </Button>
-            <Typography color="error">{this.state.status}</Typography>
+            <Typography color="error">{this.state.error}</Typography>
           </form>
         </Paper>
       </Container>
