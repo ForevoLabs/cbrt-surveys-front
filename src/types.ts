@@ -21,18 +21,21 @@ export interface Section {
   blocks: Block[]
 }
 
-export type Block =
-  TitleBlock
-  | DescriptionBlock
-  | ImageBlock
-  | VideoBlock
-  | GeoBlock
+export type Block = TitleBlock | DescriptionBlock | ImageBlock | VideoBlock | GeoBlock
+  | RadioBlock | CheckboxesBlock | DropdownBlock | ShortAnswerBlock | ParagraphBlock
 
-  | RadioBlock
-  | CheckboxesBlock
-  | DropdownBlock
-  | ShortAnswerBlock
-  | ParagraphBlock
+export interface MinimalSection {
+  type: 'radiobuttons' | 'checkboxes' | 'dropdown' | 'shortAnswer' | 'paragraph',
+  title?: string,
+  description?: string,
+  image?: string,
+  video?: string,
+  geoData?: {
+    lat?: number,
+    lng?: number,
+  },
+  base: RadioBlock | CheckboxesBlock | DropdownBlock | ShortAnswerBlock | ParagraphBlock
+}
 
 export interface TitleBlock {
   type: 'title'

@@ -1,6 +1,7 @@
 import React, { FormEvent } from 'react'
 import { Button, Container, TextField, Typography } from '@material-ui/core'
-import { Survey } from '../types'
+import { MinimalSection, Survey } from '../types'
+import Section from './Section'
 
 const DEFAULT_SURVEY: Survey = {
   id: Math.floor(Math.random() * 1e9 + 100),
@@ -10,17 +11,29 @@ const DEFAULT_SURVEY: Survey = {
   sections: [],
 }
 
+type Key = MinimalSection['type']
+
+const SECTION_TYPES: Record<Key, string> = {
+  radiobuttons: 'Радиокнопки',
+  checkboxes: 'Флажки',
+  dropdown: 'Выпадающий список',
+  shortAnswer: 'Однострочный ответ',
+  paragraph: 'Многострочный ответ',
+}
+
 interface Props {
   addSurvey (survey: Survey, cb: (res: boolean) => void): void
 }
 
 interface State {
   survey: Survey
+  sections: MinimalSection[]
 }
 
 export default class NewSurvey extends React.Component<Props, State> {
   state = {
     survey: DEFAULT_SURVEY,
+    sections: [],
   }
 
   handleChangeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,6 +69,64 @@ export default class NewSurvey extends React.Component<Props, State> {
     })
   }
 
+  makeAddSection = (sectionType: MinimalSection['type']) => () => {
+    const { sections } = this.state
+
+    let base: MinimalSection['base'] = ((): MinimalSection['base'] => {
+      switch (sectionType) {
+        case 'radiobuttons':
+        case 'checkboxes':
+        case 'dropdown':
+          return {
+            type: sectionType,
+            items: [],
+          }
+        case 'shortAnswer':
+          return {
+            type: 'shortAnswer',
+            placeholder: '',
+          }
+        case 'paragraph':
+          return {
+            type: 'paragraph',
+          }
+      }
+    })()
+
+    this.setState({
+      sections: [
+        ...sections, {
+          type: sectionType,
+          base,
+        },
+      ],
+    })
+  }
+
+  handleChangeSection = (index: number) => (name: string, value: any, base = false) => {
+    const { sections } = this.state
+    const newSections = [...sections]
+    if (base) {
+      // @ts-ignore
+      newSections[index].base[name] = value
+    } else {
+      // @ts-ignore
+      newSections[index][name] = value
+    }
+    this.setState({ sections: newSections })
+  }
+
+  handleRemoveSection = (index: number) => () => {
+    const { sections } = this.state
+    const newSections = [...sections]
+
+    newSections.splice(index, 1)
+
+    this.setState({
+      sections: newSections,
+    })
+  }
+
   handleSubmit = (event: FormEvent) => {
     event.preventDefault()
     window.scrollTo({ top: 0 })
@@ -67,7 +138,7 @@ export default class NewSurvey extends React.Component<Props, State> {
   }
 
   render () {
-    const { survey } = this.state
+    const { survey, sections } = this.state
     return (
       <>
         <Typography variant="h3" gutterBottom>Новый опрос</Typography>
@@ -101,6 +172,26 @@ export default class NewSurvey extends React.Component<Props, State> {
                 shrink: true,
               }}
             />
+            {sections.map((section: MinimalSection, i) => (
+              <div key={`${i}${section.type}`}>
+                <Section
+                  data={section}
+                  onChange={this.handleChangeSection(i)}
+                  remove={this.handleRemoveSection(i)}
+                />
+              </div>
+            ))}
+            {Object.entries(SECTION_TYPES)
+              .map(([sectionType, name]) => (
+                <Button
+                  key={sectionType}
+                  style={{ margin: '0.5em 1em 0.5em 0' }}
+                  variant="contained"
+                  onClick={this.makeAddSection(sectionType as MinimalSection['type'])}
+                >
+                  + {name}
+                </Button>
+              ))}
             <Button
               type="submit"
               style={{ margin: '1em 0' }}
