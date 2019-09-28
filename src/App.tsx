@@ -26,8 +26,8 @@ export default class App extends React.Component<{}, State> {
   checkLogin = () => {
     axios
       .get(BASE_URL + '/user', { withCredentials: true })
-      .then((res) => {
-        if (res.data.user !== void 0) {
+      .then(({ data }) => {
+        if (data.user !== void 0) {
           this.goTo(Routes.ListOfSurveys)
         } else {
           this.goTo(Routes.Login)
@@ -41,7 +41,7 @@ export default class App extends React.Component<{}, State> {
     return (
       <div className="App">
         {route === Routes.Loading &&
-        'Загрузка...'}
+        'Вход...'}
         {route === Routes.Login &&
         <Login checkLogin={this.checkLogin} />}
         {route === Routes.ListOfSurveys &&

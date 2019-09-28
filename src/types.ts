@@ -4,3 +4,10 @@ export enum Routes {
   ListOfSurveys,
   Survey,
 }
+
+export interface SurveyData {
+  surveys: {
+    title?: string,
+    description?: string,
+  }[]
+}

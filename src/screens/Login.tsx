@@ -47,7 +47,6 @@ export default class Login extends React.Component<Props, State> {
         <Paper>
           <form onSubmit={this.handleLogIn}>
             <TextField
-              id="username"
               label="Имя пользователя"
               autoComplete="username"
               margin="normal"
@@ -57,7 +56,6 @@ export default class Login extends React.Component<Props, State> {
               required
             />
             <TextField
-              id="password"
               label="Пароль"
               type="password"
               autoComplete="current-password"
@@ -74,7 +72,7 @@ export default class Login extends React.Component<Props, State> {
               color="primary"
               fullWidth
             >
-              Вход
+              Войти
             </Button>
             <Typography color="error">{this.state.status}</Typography>
           </form>
