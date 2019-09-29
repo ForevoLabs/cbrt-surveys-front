@@ -51,6 +51,31 @@ export default class ListOfSurveys extends React.Component<Props, State> {
       })
   }
 
+  handleRemoveSurvey = (index: number) => () => {
+    if (!window.confirm('Вы уверены, что хотите удалить опрос?')) {
+      return
+    }
+
+    const { surveys } = this.state.rawSurveys
+    const newSurveys = [...surveys]
+
+    newSurveys.splice(index, 1)
+
+    axios
+      .post(BASE_URL, { surveys: newSurveys }, { withCredentials: true })
+      .then(() => {
+        this.setState({
+          error: '',
+          rawSurveys: {
+            surveys: newSurveys,
+          },
+        })
+      })
+      .catch(() => {
+        this.setState({ error: 'Ошибка сохранения' })
+      })
+  }
+
   handleLogout = () => {
     axios
       .get(BASE_URL + '/logout', { withCredentials: true })
@@ -75,10 +100,17 @@ export default class ListOfSurveys extends React.Component<Props, State> {
             </Button>
           </div>
           <Typography variant="h3" gutterBottom>Опросы</Typography>
-          {rawSurveys.surveys.map((survey: Survey) => (
+          {rawSurveys.surveys.map((survey: Survey, i) => (
             <div key={survey.id}>
               <Typography variant="h6">{survey.title}</Typography>
-              <Typography variant="subtitle1" paragraph>{survey.description}</Typography>
+              <Typography variant="subtitle1">{survey.description}</Typography>
+              <Button
+                style={{ margin: '0 0 1em' }}
+                color="secondary"
+                onClick={this.handleRemoveSurvey(i)}
+              >
+                × Удалить
+              </Button>
             </div>
           ))}
           <Typography color="error">{this.state.error}</Typography>
