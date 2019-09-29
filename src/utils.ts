@@ -46,27 +46,24 @@ export const convertMiniSections = (minimal: MinimalSection): Section => {
       result.blocks.push({
         type: minimal.type,
         // @ts-ignore
-        items: minimal.items.split('\n'),
+        items: minimal.base.items ? minimal.base.items.split('\n') : void 0,
         // @ts-ignore
-        other: minimal.other || void 0,
-        // @ts-ignore
-        required: minimal.required || void 0,
+        other: minimal.base.other || void 0,
+        required: minimal.base.required || void 0,
       })
       break
     case 'shortAnswer':
       result.blocks.push({
         type: 'shortAnswer',
         // @ts-ignore
-        placeholder: minimal.placeholder,
-        // @ts-ignore
-        required: minimal.required || void 0,
+        placeholder: minimal.base.placeholder,
+        required: minimal.base.required || void 0,
       })
       break
     case 'paragraph':
       result.blocks.push({
         type: 'paragraph',
-        // @ts-ignore
-        required: minimal.required || void 0,
+        required: minimal.base.required || void 0,
       })
       break
   }
