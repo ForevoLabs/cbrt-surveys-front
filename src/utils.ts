@@ -34,8 +34,8 @@ export const convertMiniSections = (minimal: MinimalSection): Section => {
   if (minimal.lat && minimal.lng) {
     result.blocks.push({
       type: 'geoData',
-      lat: minimal.lat,
-      lng: minimal.lng,
+      lat: Number(minimal.lat),
+      lng: Number(minimal.lng),
     })
   }
 
@@ -56,7 +56,7 @@ export const convertMiniSections = (minimal: MinimalSection): Section => {
       result.blocks.push({
         type: 'shortAnswer',
         // @ts-ignore
-        placeholder: minimal.base.placeholder,
+        placeholder: minimal.base.placeholder || void 0,
         required: minimal.base.required || void 0,
       })
       break

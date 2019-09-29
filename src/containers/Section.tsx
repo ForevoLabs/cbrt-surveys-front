@@ -36,7 +36,7 @@ export default class Section extends React.Component<Props> {
       <Paper style={{ margin: '1em -40px' }}>
         <div>
           <TextField
-            label="Заголовок"
+            label="Заголовок вопроса"
             margin="normal"
             value={data.title}
             onChange={this.makeChangeHandler('title')}
@@ -44,7 +44,7 @@ export default class Section extends React.Component<Props> {
             required
           />
           <TextField
-            label="Описание"
+            label="Описание вопроса"
             margin="normal"
             value={data.description}
             onChange={this.makeChangeHandler('description')}
