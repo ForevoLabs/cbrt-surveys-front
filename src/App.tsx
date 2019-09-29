@@ -45,7 +45,7 @@ export default class App extends React.Component<{}, State> {
         {route === Routes.Login &&
         <Login checkLogin={this.checkLogin} />}
         {route === Routes.ListOfSurveys &&
-        <ListOfSurveys />}
+        <ListOfSurveys checkLogin={this.checkLogin} />}
       </div>
     )
   }

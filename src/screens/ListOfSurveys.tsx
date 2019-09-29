@@ -1,12 +1,12 @@
 import React from 'react'
-import { Container, Paper, Typography } from '@material-ui/core'
+import { Button, Container, Paper, Typography } from '@material-ui/core'
 import axios from 'axios'
 import { Survey, SurveyData } from '../types'
 import { BASE_URL } from '../constants'
 import NewSurvey from '../containers/NewSurvey'
 
 interface Props {
-
+  checkLogin (): void
 }
 
 interface State {
@@ -51,6 +51,14 @@ export default class ListOfSurveys extends React.Component<Props, State> {
       })
   }
 
+  handleLogout = () => {
+    axios
+      .get(BASE_URL + '/logout', { withCredentials: true })
+      .then(() => {
+        this.props.checkLogin()
+      })
+  }
+
   render() {
     const { isLoading, rawSurveys } = this.state
 
@@ -61,6 +69,11 @@ export default class ListOfSurveys extends React.Component<Props, State> {
     return (
       <Container maxWidth="md">
         <Paper>
+          <div style={{ float: 'right' }}>
+            <Button color="secondary" onClick={this.handleLogout}>
+              Выйти
+            </Button>
+          </div>
           <Typography variant="h3" gutterBottom>Опросы</Typography>
           {rawSurveys.surveys.map((survey: Survey) => (
             <div key={survey.id}>
