@@ -150,7 +150,7 @@ export default class NewSurvey extends React.Component<Props, State> {
 
     this.props.addSurvey(surveyWithSections, (res) => {
       if (res) {
-        this.setState({ survey: DEFAULT_SURVEY })
+        this.setState({ survey: DEFAULT_SURVEY, sections: [] })
       }
     })
   }
