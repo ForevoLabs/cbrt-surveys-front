@@ -1,6 +1,7 @@
 import React, { FormEvent } from 'react'
 import { Button, Container, TextField, Typography } from '@material-ui/core'
 import { MinimalSection, Survey } from '../types'
+import { convertMiniSections } from '../utils'
 import Section from './Section'
 
 const DEFAULT_SURVEY: Survey = {
@@ -80,15 +81,19 @@ export default class NewSurvey extends React.Component<Props, State> {
           return {
             type: sectionType,
             items: [],
+            other: '',
+            required: false,
           }
         case 'shortAnswer':
           return {
             type: 'shortAnswer',
             placeholder: '',
+            required: false,
           }
         case 'paragraph':
           return {
             type: 'paragraph',
+            required: false,
           }
       }
     })()
@@ -97,6 +102,12 @@ export default class NewSurvey extends React.Component<Props, State> {
       sections: [
         ...sections, {
           type: sectionType,
+          title: '',
+          description: '',
+          image: '',
+          video: '',
+          lat: 0,
+          lng: 0,
           base,
         },
       ],
@@ -106,6 +117,7 @@ export default class NewSurvey extends React.Component<Props, State> {
   handleChangeSection = (index: number) => (name: string, value: any, base = false) => {
     const { sections } = this.state
     const newSections = [...sections]
+
     if (base) {
       // @ts-ignore
       newSections[index].base[name] = value
@@ -113,6 +125,7 @@ export default class NewSurvey extends React.Component<Props, State> {
       // @ts-ignore
       newSections[index][name] = value
     }
+
     this.setState({ sections: newSections })
   }
 
@@ -130,7 +143,12 @@ export default class NewSurvey extends React.Component<Props, State> {
   handleSubmit = (event: FormEvent) => {
     event.preventDefault()
     window.scrollTo({ top: 0 })
-    this.props.addSurvey(this.state.survey, (res) => {
+    const surveyWithSections = {
+      ...this.state.survey,
+      sections: this.state.sections.map(convertMiniSections),
+    }
+
+    this.props.addSurvey(surveyWithSections, (res) => {
       if (res) {
         this.setState({ survey: DEFAULT_SURVEY })
       }

@@ -26,14 +26,12 @@ export type Block = TitleBlock | DescriptionBlock | ImageBlock | VideoBlock | Ge
 
 export interface MinimalSection {
   type: 'radiobuttons' | 'checkboxes' | 'dropdown' | 'shortAnswer' | 'paragraph',
-  title?: string,
+  title: string,
   description?: string,
   image?: string,
   video?: string,
-  geoData?: {
-    lat?: number,
-    lng?: number,
-  },
+  lat?: number,
+  lng?: number,
   base: RadioBlock | CheckboxesBlock | DropdownBlock | ShortAnswerBlock | ParagraphBlock
 }
 
